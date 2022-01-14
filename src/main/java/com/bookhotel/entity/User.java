@@ -19,11 +19,13 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+    private String name;
+    @Column(columnDefinition="TINYINT(1)")
+    private Boolean gender;
     private String username;
     private String email;
     private String password;
@@ -37,7 +39,9 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     public User(String username, String email,
-                String password, String address, String identification, String phone) {
+                String password,String name, Boolean gender, String address, String identification, String phone) {
+        this.gender=gender;
+        this.name=name;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -45,4 +49,6 @@ public class User {
         this.identification = identification;
         this.phone = phone;
     }
+
+
 }

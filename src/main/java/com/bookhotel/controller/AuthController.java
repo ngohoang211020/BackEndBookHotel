@@ -88,11 +88,10 @@ public class AuthController {
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!", false));
         }
-
         // Create new user's account
         User user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()), signUpRequest.getAddress(), signUpRequest.getIdentification(), signUpRequest.getPhone());
+                encoder.encode(signUpRequest.getPassword()),signUpRequest.getName(),signUpRequest.getGender(), signUpRequest.getAddress(), signUpRequest.getIdentification(), signUpRequest.getPhone());
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
@@ -110,9 +109,10 @@ public class AuthController {
                         roles.add(modRole);
 
                         break;
-                    default:
+                    case "user":
                         Role userRole = userService.findByName(ERole.ROLE_USER);
                         roles.add(userRole);
+                        break;
                 }
             });
         } else {
