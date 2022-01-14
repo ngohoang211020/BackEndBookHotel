@@ -15,7 +15,8 @@ import java.util.Set;
 public class SignupRequest {
 
     private String username;
-
+    private String name;
+    private Boolean gender;
     private String email;
 
     private Set<String> role;
