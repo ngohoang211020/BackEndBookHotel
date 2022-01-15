@@ -12,11 +12,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-public class UserService implements CommonService<User> {
+@Transactional
+public class UserService {
     public static final int USERS_PER_PAGE = 5;
 
     @Autowired
@@ -32,12 +34,16 @@ public class UserService implements CommonService<User> {
         user.setPassword(encodedPassword);
     }
 
-    @Override
     public void save(User user) {
         userRepo.save(user);
     }
 
-    @Override
+
+    public Boolean existsById(Integer id) {
+        return userRepo.existsById(id);
+    }
+
+
     public void update(User user, Integer id) {
         User existedUser = userRepo.findById(id).get();
         if (existedUser != null) {
@@ -51,38 +57,37 @@ public class UserService implements CommonService<User> {
         save(user);
     }
 
-    @Override
+
     public Paging<User> listByPage(Integer pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber - 1, USERS_PER_PAGE);
-        Page userPage = userRepo.findAll(pageable);
+        Page<User> userPage = userRepo.findAll(pageable);
         return new Paging<User>(userPage);
     }
 
-    @Override
+
     public void deleteById(Integer id) {
         userRepo.deleteById(id);
     }
 
-    @Override
+
     public List<User> findAll() {
         return userRepo.findAll();
     }
 
-    @Override
+
     public User findById(Integer id) {
         return userRepo.findById(id).get();
     }
 
-    @Override
+
     public User findByName(String name) {
         return userRepo.findByUsername(name).get();
     }
 
-    @Override
-    public Paging<User> findByKeyWord(String keyword,Integer pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, USERS_PER_PAGE);
-        Page userPage = userRepo.findByKeyWord(keyword,pageable);
-        return new Paging<User>(userPage);
+
+    public List<User> findByKeyWord(String keyword) {
+
+        return userRepo.findByKeyWord(keyword);
     }
 
     public boolean existsByEmail(String email) {

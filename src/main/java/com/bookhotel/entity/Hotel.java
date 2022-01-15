@@ -29,6 +29,10 @@ public class Hotel {
 
     private Float rate;
 
+    private String description;
+
+    private String image;
+
     @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -43,4 +47,14 @@ public class Hotel {
     @OneToMany(fetch =FetchType.LAZY,cascade = CascadeType.ALL
             ,orphanRemoval = true,mappedBy = "hotel")
     private Set<Room> roomList;
+
+    public Hotel(String name, String address, String phone, Float rate, String description, String image, Location location) {
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.rate = rate;
+        this.description = description;
+        this.image = image;
+        this.location = location;
+    }
 }

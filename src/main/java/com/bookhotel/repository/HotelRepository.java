@@ -9,10 +9,9 @@ import java.util.List;
 
 @Repository
 public interface HotelRepository extends JpaRepository<Hotel, Integer> {
-    @Query("select h from Hotel h where h.location.id = ?1")
-    List<Hotel> findByLocation_Id(Integer id);
 
-    @Query("SELECT h FROM Hotel h inner join Location l on h.location.id=l.id where l.name like %?1%")
-    List<Hotel> findByLocation_Name(String name);
+
+    @Query("select h from Hotel h where h.name like %?1% or h.address like %?1% or h.phone like %?1% or h.location.name like %?1%")
+    List<Hotel> findByKeyWord(String keyword);
 
 }
