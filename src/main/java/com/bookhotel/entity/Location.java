@@ -2,6 +2,7 @@ package com.bookhotel.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +11,8 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@Table(name = "location")
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,9 +21,15 @@ public class Location {
     @Column(name = "location_name")
     private String name;
     @Column(name = "number_hotels")
-    private String numberHotels;
+    private Integer numberHotels;
     @JsonIgnore
     @OneToMany(fetch =FetchType.LAZY,cascade = CascadeType.ALL
-            ,orphanRemoval = true,mappedBy = "location")
+            ,mappedBy = "location")
     private Set<Hotel> hotelList;
+
+    public Location(Integer id, String name,Integer numberHotels) {
+        this.id = id;
+        this.name = name;
+        this.numberHotels=numberHotels;
+    }
 }

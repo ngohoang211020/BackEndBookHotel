@@ -2,6 +2,7 @@ package com.bookhotel.entity;
 
 import com.bookhotel.enums.ERole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,4 +29,8 @@ public class Role {
     @JsonIgnore
     private Set<User> users = new HashSet<>();
 
+    public Role(Integer id, ERole name) {
+        this.id = id;
+        this.name = name;
+    }
 }
