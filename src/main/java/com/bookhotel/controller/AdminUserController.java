@@ -7,6 +7,7 @@ import com.bookhotel.request.SignupRequest;
 import com.bookhotel.response.MessageResponse;
 import com.bookhotel.response.ResponseObject;
 import com.bookhotel.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +28,14 @@ public class AdminUserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Operation(summary = "Lấy danh sách user ở trang đầu tiên", description = "Trả về danh sách user ở trang 1", tags = { "User" })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users")
     public ResponseEntity<ResponseObject> listFirstPage() {
         return listByPage(1);
     }
 
-
+    @Operation(summary = "Lấy danh sách user ở trang n", description = "Trả về danh sách user ở trang n", tags = { "User" })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/{pageNum}")
     public ResponseEntity<ResponseObject> listByPage(@PathVariable("pageNum") Integer pageNum) {
@@ -41,14 +43,14 @@ public class AdminUserController {
         return !userService.listByPage(pageNum).getContent().isEmpty() ? ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("ok", "Query USERS by page successfully", userService.listByPage(1))) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot Find USERS", ""));
     }
 
-
+    @Operation(summary = "Tìm kiếm user với từ khoá", description = "Trả về danh sách user cần tìm", tags = { "User" })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/users")
     public ResponseEntity<ResponseObject> searchUser(@RequestParam("keyword") String keyword) {
         return userService.findByKeyWord(keyword).size()>0 ? ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("ok", "Query USERS by keyword successfully", userService.findByKeyWord(keyword))) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot Find USERS", ""));
     }
 
-
+    @Operation(summary = "Tạo mới 1 User", description = "Trả về 1 message thông báo", tags = { "User" })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/users/save")
     public ResponseEntity<MessageResponse> insertUser(@RequestBody SignupRequest signupRequest) {
@@ -94,7 +96,7 @@ public class AdminUserController {
         return ResponseEntity.ok(new MessageResponse("User registered successfully!", true));
     }
 
-
+    @Operation(summary = "Update 1 User theo id", description = "Trả về 1 message thông báo", tags = { "User" })
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/users/{id}")
     public ResponseEntity<MessageResponse> updateUser(@RequestBody User user, @PathVariable("id") Integer id) {
@@ -103,6 +105,7 @@ public class AdminUserController {
     }
 
 
+    @Operation(summary = "Xoá 1 User theo id", description = "Trả về 1 message thông báo", tags = { "User" })
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/users/{id}")
     public ResponseEntity<MessageResponse> deleteUser(@PathVariable("id") Integer id) {

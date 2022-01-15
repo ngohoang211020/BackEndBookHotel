@@ -1,17 +1,9 @@
 package com.bookhotel.database;
 
-import com.bookhotel.entity.Location;
-import com.bookhotel.entity.Role;
-import com.bookhotel.enums.ERole;
 import com.bookhotel.repository.LocationRepository;
 import com.bookhotel.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 public class HotelDatabase {

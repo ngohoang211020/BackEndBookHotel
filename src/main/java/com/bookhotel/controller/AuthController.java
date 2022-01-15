@@ -10,6 +10,7 @@ import com.bookhotel.response.MessageResponse;
 import com.bookhotel.security.jwt.JwtUtils;
 import com.bookhotel.security.service.UserDetailsImpl;
 import com.bookhotel.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,6 +45,7 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Operation(summary = "Đăng nhập", description = "Trả về jwt và thông tin user", tags = { "User" })
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         // Xác thực từ username và password.
@@ -75,6 +77,7 @@ public class AuthController {
 
     }
 
+    @Operation(summary = "Đăng ký", description = "Trả về message", tags = { "User" })
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
         if (userService.existsByUsername(signUpRequest.getUsername())) {
