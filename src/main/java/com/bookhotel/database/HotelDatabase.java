@@ -19,7 +19,7 @@ public class HotelDatabase {
     private RoleRepository roleRepository;
     @Autowired
     private LocationRepository locationRepository;
-    @Bean
+   /* @Bean
     CommandLineRunner initDatabase() {
         return new CommandLineRunner() {
             @Override
@@ -43,5 +43,5 @@ public class HotelDatabase {
             }
         };
 
-    }
+    }*/
 }
