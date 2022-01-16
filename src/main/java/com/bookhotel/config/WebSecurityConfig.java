@@ -63,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .antMatchers("/api/role/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 //api/auth truy cap bth khong can check
                 .anyRequest().authenticated();
 
