@@ -43,7 +43,7 @@ public class AuthController {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @Operation(summary = "Đăng nhập", description = "Trả về jwt và thông tin user", tags = { "User" })
+    @Operation(summary = "Đăng nhập", description = "Trả về jwt và thông tin user", tags = { "Login/logout" })
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         // Xác thực từ username và password.
@@ -75,7 +75,7 @@ public class AuthController {
 
     }
 
-    @Operation(summary = "Đăng ký", description = "Trả về message", tags = { "User" })
+    @Operation(summary = "Đăng ký", description = "Trả về message", tags = { "Login/logout" })
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
         if (userService.existsByUsername(signUpRequest.getUsername())) {
