@@ -26,6 +26,7 @@ public class RoleController {
         return roleService.findAll();
     }
 
+    @Operation(summary = "Lấy Role 1 theo id ", description = "Trả về 1 Role", tags = {"Role"})
     @GetMapping("/{id}")
     ResponseEntity<ResponseObject> findById(@PathVariable Integer id) {
         Optional<Role> foundRole = Optional.ofNullable(roleService.findById(id));
@@ -61,6 +62,7 @@ public class RoleController {
         return ResponseEntity.ok(new MessageResponse("User updated Succesfully!!!", true));
     }
 
+    @Operation(summary = "Delete 1 Role theo id", description = "Trả về 1 message thông báo", tags = {"Role"})
     @DeleteMapping("/{id}")
     ResponseEntity<ResponseObject> deleteRole(@PathVariable int id) {
         Boolean exists = roleService.existsById(id);
