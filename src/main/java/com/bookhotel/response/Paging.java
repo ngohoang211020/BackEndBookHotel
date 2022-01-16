@@ -5,9 +5,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 public class Paging<T> {
     private final long totalPages;
 

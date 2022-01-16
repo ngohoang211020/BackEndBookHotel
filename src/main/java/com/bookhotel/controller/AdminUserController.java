@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("api/admin")
 public class AdminUserController {
