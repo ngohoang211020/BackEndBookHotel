@@ -10,12 +10,7 @@ import java.util.Set;
 
 
 @Entity
-//cac truong duy nhat, khong lap lai
-@Table(name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
-                @UniqueConstraint(columnNames = "email")
-        })
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,9 +19,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    @Column(columnDefinition="TINYINT(1)")
+    @Column
     private Boolean gender;
+    @Column(unique = true)
     private String username;
+    @Column(unique = true)
     private String email;
     private String password;
     private String address;

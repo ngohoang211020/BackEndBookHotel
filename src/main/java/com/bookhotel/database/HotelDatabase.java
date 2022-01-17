@@ -1,9 +1,17 @@
 package com.bookhotel.database;
 
+import com.bookhotel.entity.Location;
+import com.bookhotel.entity.Role;
+import com.bookhotel.enums.ERole;
 import com.bookhotel.repository.LocationRepository;
 import com.bookhotel.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 public class HotelDatabase {
@@ -11,13 +19,13 @@ public class HotelDatabase {
     private RoleRepository roleRepository;
     @Autowired
     private LocationRepository locationRepository;
-   /* @Bean
+    @Bean
     CommandLineRunner initDatabase() {
         return new CommandLineRunner() {
             @Override
             public void run(String... args) throws Exception {
                 Role roleAdmin  = new Role(1, ERole.ROLE_ADMIN);
-                Role roleMod=new Role(2,ERole.ROLE_MODERATOR);
+                Role roleMod=new Role(2, ERole.ROLE_MODERATOR);
                 Role roleUser = new Role(3, ERole.ROLE_USER);
                 List<Role> list=new ArrayList<Role>();
                 list.add(roleAdmin); list.add(roleMod); list.add(roleUser);
@@ -35,5 +43,5 @@ public class HotelDatabase {
             }
         };
 
-    }*/
+    }
 }
