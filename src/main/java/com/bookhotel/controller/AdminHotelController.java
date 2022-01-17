@@ -21,14 +21,14 @@ public class AdminHotelController {
     @Autowired
     private HotelService hotelService;
 
-    @Operation(summary = "Lấy danh sách khách sạn ở trang đầu tiên", description = "Trả về danh sách khách sạn ở trang 1", tags = { "Hotel" })
+    @Operation(summary = "Lấy danh sách khách sạn ở trang đầu tiên", description = "Trả về danh sách khách sạn ở trang 1", tags = { "Admin/Hotel" })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/hotels")
     public ResponseEntity<ResponseObject> listFirstPage() {
         return listByPage(1);
     }
 
-    @Operation(summary = "Lấy danh sách khách sạn ở trang n", description = "Trả về danh sách khách sạn ở trang n", tags = { "Hotel" })
+    @Operation(summary = "Lấy danh sách khách sạn ở trang n", description = "Trả về danh sách khách sạn ở trang n", tags = { "Admin/Hotel" })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/hotels/{pageNum}")
     public ResponseEntity<ResponseObject> listByPage(@PathVariable("pageNum") Integer pageNum) {
@@ -36,14 +36,14 @@ public class AdminHotelController {
         return !hotelService.listByPage(pageNum).getContent().isEmpty() ? ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("ok", "Query Hotels by page successfully", hotelService.listByPage(1))) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot Find Hotels", ""));
     }
 
-    @Operation(summary = "Tìm kiếm khách sạn với từ khoá", description = "Trả về danh sách khách sạn cần tìm", tags = { "Hotel" })
+    @Operation(summary = "Tìm kiếm khách sạn với từ khoá", description = "Trả về danh sách khách sạn cần tìm", tags = { "Admin/Hotel" })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/hotels")
     public ResponseEntity<ResponseObject> searchUser(@RequestParam("keyword") String keyword) {
         return hotelService.findByKeyword(keyword).size()>0 ? ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("ok", "Query Hotels by keyword successfully", hotelService.findByKeyword(keyword))) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot Find Hotels", ""));
     }
 
-    @Operation(summary = "Tạo mới 1 khách sạn", description = "Trả về 1 message thông báo", tags = { "Hotel" })
+    @Operation(summary = "Tạo mới 1 khách sạn", description = "Trả về 1 message thông báo", tags = { "Admin/Hotel" })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/hotels/save")
     public ResponseEntity<MessageResponse> insertHotel(@RequestBody HotelRequest hotelRequest) {
@@ -55,7 +55,7 @@ public class AdminHotelController {
         return ResponseEntity.ok(new MessageResponse("Create hotel successfully!", true));
     }
 
-    @Operation(summary = "Update 1 khách sạn theo id", description = "Trả về 1 message thông báo", tags = { "Hotel" })
+    @Operation(summary = "Update 1 khách sạn theo id", description = "Trả về 1 message thông báo", tags = { "Admin/Hotel" })
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/hotels/{id}")
     public ResponseEntity<MessageResponse> updateUser(@RequestBody HotelRequest hotelRequest, @PathVariable("id") Integer id) {
@@ -65,7 +65,7 @@ public class AdminHotelController {
         return ResponseEntity.ok(new MessageResponse("Hotel updated Succesfully!!!", true));
     }
 
-    @Operation(summary = "Xoá 1 khách sạn theo id", description = "Trả về 1 message thông báo", tags = { "Hotel" })
+    @Operation(summary = "Xoá 1 khách sạn theo id", description = "Trả về 1 message thông báo", tags = { "Admin/Hotel" })
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/hotels/{id}")
     public ResponseEntity<MessageResponse> deleteUser(@PathVariable("id") Integer id) {
