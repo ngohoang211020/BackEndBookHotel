@@ -41,7 +41,7 @@ public class AdminUserController {
     @GetMapping("/users/{pageNum}")
     public ResponseEntity<ResponseObject> listByPage(@PathVariable("pageNum") Integer pageNum) {
 
-        return !userService.listByPage(pageNum).getContent().isEmpty() ? ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("ok", "Query USERS by page successfully", userService.listByPage(1))) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot Find USERS", ""));
+        return !userService.listByPage(pageNum).getContent().isEmpty() ? ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("ok", "Query USERS by page successfully", userService.listByPage(pageNum))) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot Find USERS", ""));
     }
 
     @Operation(summary = "Tìm kiếm user với từ khoá", description = "Trả về danh sách user cần tìm", tags = { "User" })
