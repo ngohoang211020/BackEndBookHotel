@@ -9,7 +9,9 @@ import java.util.List;
 
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Integer> {
-    @Query("select l from Location l where l.name LIKE %?1%")
-    List<Location> findByName(String name);
+    @Query("select l from Location l where l.location LIKE %?1%")
+    List<Location> getByKeyword(String keyword);
+
+    List<Location> findByLocation(String trim);
 
 }

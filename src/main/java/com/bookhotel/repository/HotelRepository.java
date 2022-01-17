@@ -6,12 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HotelRepository extends JpaRepository<Hotel, Integer> {
 
 
-    @Query("select h from Hotel h where h.name like %?1% or h.address like %?1% or h.phone like %?1% or h.location.name like %?1%")
+    @Query("select h from Hotel h where h.name like %?1% or h.address like %?1% or h.phone like %?1% or h.location.location like %?1%")
     List<Hotel> findByKeyWord(String keyword);
 
+    List<Hotel> findByLocationId(Integer locationId);
+
+    Optional<Hotel> findByIdAndLocationId(int id, int LocationId);
 }

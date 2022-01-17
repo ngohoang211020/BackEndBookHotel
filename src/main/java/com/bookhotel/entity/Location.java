@@ -1,35 +1,49 @@
 package com.bookhotel.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "location")
-public class Location {
+public class Location extends AuditModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "location_id")
+    @Column(name = "id")
     private Integer id;
-    @Column(name = "location_name")
-    private String name;
-    @Column(name = "number_hotels")
-    private Integer numberHotels;
-    @JsonIgnore
-    @OneToMany(fetch =FetchType.LAZY,cascade = CascadeType.ALL
-            ,mappedBy = "location")
-    private Set<Hotel> hotelList;
 
-    public Location(Integer id, String name,Integer numberHotels) {
-        this.id = id;
-        this.name = name;
-        this.numberHotels=numberHotels;
+    @Column(name = "location", nullable = false,  length = 300)
+    private String location;
+
+    @Column(name = "image")
+    private String image;
+
+    @OneToMany(mappedBy = "location", cascade = {CascadeType.ALL})
+    private List<Hotel> hotels = new ArrayList<>();
+
+    @Transient
+    private int number_hotels;
+
+    public int getNumber_hotels() {
+        this.number_hotels = 0;
+        if (!hotels.isEmpty()) {
+            this.number_hotels = hotels.size();
+        }
+        return number_hotels;
     }
+
+    public Location(Integer location_id, String location, String image) {
+        this.id = location_id;
+        this.location = location;
+        this.image = image;
+    }
+
+
 }

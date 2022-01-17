@@ -45,7 +45,7 @@ public class HotelService {
             existedHotel.setName(hotel.getName());
             existedHotel.setPhone(hotel.getPhone());
             existedHotel.setRate(hotel.getRate());
-            existedHotel.setDescription(hotel.getDescription());
+            existedHotel.setContent(hotel.getContent());
             existedHotel.setImage(hotel.getImage());
         }
         save(existedHotel);

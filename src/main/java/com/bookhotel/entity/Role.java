@@ -25,8 +25,8 @@ public class Role {
     //danh dau field su dung enum
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-        private ERole name;
-    @ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
+    private ERole name;
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<User> users = new HashSet<>();
 

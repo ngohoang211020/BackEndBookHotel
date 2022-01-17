@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "hotels")
-public class Hotel {
+public class Hotel extends AuditModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hotel_id")
@@ -29,7 +30,7 @@ public class Hotel {
 
     private Float rate;
 
-    private String description;
+    private String content;
 
     private String image;
 
@@ -46,14 +47,14 @@ public class Hotel {
     @JsonIgnore
     @OneToMany(fetch =FetchType.LAZY,cascade = CascadeType.ALL
             ,orphanRemoval = true,mappedBy = "hotel")
-    private Set<Room> roomList;
+    private List<Room> roomList;
 
-    public Hotel(String name, String address, String phone, Float rate, String description, String image, Location location) {
+    public Hotel(String name, String address, String phone, Float rate, String content, String image, Location location) {
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.rate = rate;
-        this.description = description;
+        this.content = content;
         this.image = image;
         this.location = location;
     }
