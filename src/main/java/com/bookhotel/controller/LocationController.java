@@ -4,6 +4,7 @@ package com.bookhotel.controller;
 import com.bookhotel.entity.Location;
 import com.bookhotel.repository.LocationRepository;
 import com.bookhotel.response.ResponseObject;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +20,13 @@ public class LocationController {
 
     @Autowired
     private LocationRepository locationRepository;
-
+    @Operation(summary = "Lấy danh sách location ", description = "Trả về danh sách location", tags = { "Location" })
     @GetMapping("/locations")
     public List<Location> getLocations() {
         return locationRepository.findAll();
     }
 
+    @Operation(summary = "Lấy Location theo id", description = "Trả về 1 location", tags = { "Location" })
     @GetMapping("/locations/{id}")
     ResponseEntity<ResponseObject> findById(@PathVariable Integer id) {
         Optional<Location> foundLocation = locationRepository.findById(id);
@@ -37,6 +39,7 @@ public class LocationController {
                 );
     }
 
+    @Operation(summary = "Tim kiem Location theo keyword", description = "Trả về 1 listLocation", tags = { "Location" })
     @GetMapping("/locations/keyword")
     ResponseEntity<ResponseObject> findByKeyWord(@RequestParam(value = "location") String keyword) {
 //        Optional<Location> foundLocation = locationRepository.findById(id);
@@ -49,6 +52,7 @@ public class LocationController {
                 );
     }
 
+    @Operation(summary = "Insert 1 location", description = "Trả về messageResponse", tags = { "Location" })
     @PostMapping("/locations/insert")
     ResponseEntity<ResponseObject> insertLocation(@RequestBody Location newLocation) {
         List<Location> foundLocations = locationRepository.findByLocation(newLocation.getLocation().trim());
@@ -61,7 +65,7 @@ public class LocationController {
                 new ResponseObject("ok", "Insert Location Successfully", locationRepository.save(newLocation))
         );
     }
-
+    @Operation(summary = "Update 1 location", description = "Trả về messageResponse", tags = { "Location" })
     @PutMapping("/locations/{id}")
     ResponseEntity<ResponseObject> updateLocation(@RequestBody Location newLocation, @PathVariable Integer id) {
         Location updatedLocation = locationRepository.findById(id).map(location -> {
@@ -77,6 +81,7 @@ public class LocationController {
         );
     }
 
+    @Operation(summary = "Delete 1 location", description = "Trả về messageResponse", tags = { "Location" })
     @DeleteMapping("/locations/{id}")
     ResponseEntity<ResponseObject> deleteLocation(@PathVariable Integer id) {
         boolean exists = locationRepository.existsById(id);

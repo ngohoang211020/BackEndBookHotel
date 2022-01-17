@@ -6,6 +6,7 @@ import com.bookhotel.entity.Room;
 import com.bookhotel.repository.HotelRepository;
 import com.bookhotel.repository.RoomRepository;
 import com.bookhotel.response.ResponseObject;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +27,13 @@ public class RoomController {
     @Autowired
     private RoomRepository roomRepository;
 
+    @Operation(summary = "Get room theo hotel", description = "Trả về list Room", tags = { "Room" })
     @GetMapping("/hotels/{hotelId}/rooms")
     public List<Room> getRoomsByHotel(@PathVariable(value = "hotelId") Integer hotelId) {
         return roomRepository.findByHotelId(hotelId);
     }
 
+    @Operation(summary = "Insert room theo hotel", description = "Trả về ResponseObject", tags = { "Room" })
     @PostMapping("/hotels/{hotelId}/rooms")
     ResponseEntity<ResponseObject> createRoom(@PathVariable(value = "hotelId") Integer hotelId, @RequestBody Room newRoom){
         Optional<Hotel> foundHotelId = hotelRepository.findById(hotelId);
@@ -48,7 +51,7 @@ public class RoomController {
             );
         }
     }
-
+    @Operation(summary = "Update room theo hotel", description = "Trả về ResponseObject", tags = { "Room" })
     @PutMapping("/hotels/{hotelId}/rooms/{roomId}")
     ResponseEntity<ResponseObject> updateRoom(@PathVariable(value = "hotelId") Integer hotelId,
                                                @PathVariable(value = "roomId") Integer roomId,@RequestBody Room roomRequest) {
@@ -73,6 +76,8 @@ public class RoomController {
             );
         }
     }
+
+    @Operation(summary = "Delete room theo hotel", description = "Trả về ResponseObject", tags = { "Room" })
     @DeleteMapping("/hotels/{hotelId}/rooms/{roomId}")
     ResponseEntity<ResponseObject> deleterRoom(@PathVariable(value = "hotelId") Integer hotelId,
                                                @PathVariable(value = "roomId") Integer roomId){

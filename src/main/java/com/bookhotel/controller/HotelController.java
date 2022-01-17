@@ -6,6 +6,7 @@ import com.bookhotel.entity.Location;
 import com.bookhotel.repository.HotelRepository;
 import com.bookhotel.repository.LocationRepository;
 import com.bookhotel.response.ResponseObject;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +26,13 @@ public class HotelController {
     @Autowired
     private HotelRepository hotelRepository;
 
+    @Operation(summary = "Lấy danh sách khách sạn tại 1 location", description = "Trả về 1 list hotel", tags = { "Hotel" })
     @GetMapping("/locations/{locationId}/hotels")
     public List<Hotel> getHotelsByLocation(@PathVariable(value = "locationId") Integer locationId) {
         return hotelRepository.findByLocationId(locationId);
     }
 
+    @Operation(summary = "Insert 1 khách sạn tại 1 location", description = "Trả về 1 Response Object", tags = { "Hotel" })
     @PostMapping("/locations/{locationId}/hotels")
     ResponseEntity<ResponseObject> createHotel(@PathVariable(value = "locationId") Integer locationId, @RequestBody Hotel newHotel) {
         Optional<Location> foundLocationId = locationRepository.findById(locationId);
@@ -48,6 +51,7 @@ public class HotelController {
         }
     }
 
+    @Operation(summary = "Update 1 khach san theo id", description = "Trả về 1 Response Object", tags = { "Hotel" })
     @PutMapping("/locations/{locationId}/hotels/{hotelId}")
     ResponseEntity<ResponseObject> updateHotel(@PathVariable(value = "locationId") Integer locationId,
                                                @PathVariable(value = "hotelId") Integer hotelId, @RequestBody Hotel hotelRequest) {
@@ -74,6 +78,7 @@ public class HotelController {
         }
     }
 
+    @Operation(summary = "Delete 1 hotel theo id", description = "Trả về ResponseObject", tags = { "Hotel" })
     @DeleteMapping("/locations/{locationId}/hotels/{hotelId}")
     ResponseEntity<ResponseObject> deleteHotel(@PathVariable(value = "locationId") Integer locationId,
                                                @PathVariable(value = "hotelId") Integer hotelId) {
