@@ -7,6 +7,7 @@ import com.bookhotel.request.LoginRequest;
 import com.bookhotel.request.SignupRequest;
 import com.bookhotel.response.JwtResponse;
 import com.bookhotel.response.MessageResponse;
+import com.bookhotel.response.ResponseObject;
 import com.bookhotel.security.jwt.JwtUtils;
 import com.bookhotel.security.service.UserDetailsImpl;
 import com.bookhotel.service.UserService;
@@ -36,6 +37,7 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
 
     @Autowired
     private PasswordEncoder encoder;
@@ -67,7 +69,7 @@ public class AuthController {
                     userDetails.getId(),
                     userDetails.getUsername(), userDetails.getName(),
                     userDetails.getPhone(), userDetails.getAddress(), userDetails.getIdentification(), userDetails.getEmail(),
-                    userDetails.getPassword(),roles));
+                    userDetails.getPassword(), roles));
         } catch (AuthenticationException e) {
             return ResponseEntity.ok(new MessageResponse("Error: Authentication Fail", false));
 
@@ -125,5 +127,36 @@ public class AuthController {
         userService.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!", true));
+    }
+
+    @Operation(summary = "Quên mật khẩu", description = "Từ username lấy account", tags = {"Login/logout"})
+    @PostMapping("/singin/forget")
+    public ResponseEntity<ResponseObject> forgotPassword(@RequestParam("keyword") String keyword) {
+        if (userService.existsByEmail(keyword)) {
+            return ResponseEntity.ok(new ResponseObject("ok", "Success", userService.findByEmail(keyword)));
+        }
+        else if(userService.existsByPhone(keyword)){
+            return ResponseEntity.ok(new ResponseObject("ok", "Success", userService.findByPhone(keyword)));
+        }
+        else if(userService.existsByUsername(keyword)){
+            return ResponseEntity.ok(new ResponseObject("ok", "Success", userService.findByName(keyword)));
+        }
+        else{
+            return ResponseEntity.ok(new ResponseObject("Fail", "Error: Account not found",""));
+        }
+
+    }
+
+    @Operation(summary = "Đổi mật khẩu", description = "Đổi mật khẩu mới", tags = {"Login/logout"})
+    @PutMapping("/singin/forget/{userid}")
+    public ResponseEntity<ResponseObject> changePassword(@RequestParam("password") String password, @PathVariable("userid")Integer userid) {
+        if (userService.existsById(userid)) {
+            User user = userService.findById(userid);
+            user.setPassword(encoder.encode(password));
+            userService.save(user);
+            return ResponseEntity.ok(new ResponseObject("Ok", "Change password Success", user));
+        }
+        return ResponseEntity.ok(new ResponseObject("Fail", "Change password fail", ""));
+
     }
 }

@@ -1,11 +1,14 @@
 package com.bookhotel.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -19,7 +22,12 @@ public class RoomService {
     private Integer id;
     @Column(name = "service_name")
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
-    private Room room;
+    @ManyToMany(mappedBy = "roomServices", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Room> rooms = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "hotel_id")
+    @JsonIgnore
+    private Hotel hotel;
 }

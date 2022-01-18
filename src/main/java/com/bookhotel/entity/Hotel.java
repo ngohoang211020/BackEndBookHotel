@@ -49,6 +49,11 @@ public class Hotel {
             ,orphanRemoval = true,mappedBy = "hotel")
     private List<Room> roomList;
 
+    @JsonIgnore
+    @OneToMany(fetch =FetchType.LAZY,cascade = CascadeType.ALL
+            ,orphanRemoval = true,mappedBy = "hotel")
+    private Set<RoomService> roomServices;
+
     public Hotel(String name, String address, String phone, Float rate, String content, String image, Location location) {
         this.name = name;
         this.address = address;

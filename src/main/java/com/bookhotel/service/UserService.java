@@ -84,6 +84,12 @@ public class UserService {
     public User findByName(String name) {
         return userRepo.findByUsername(name).get();
     }
+    public User findByEmail(String name) {
+        return userRepo.findByEmail(name);
+    }
+    public User findByPhone(String name) {
+        return userRepo.findByPhone(name);
+    }
 
 
     public List<User> findByKeyWord(String keyword) {
@@ -91,14 +97,17 @@ public class UserService {
         return userRepo.findByKeyWord(keyword);
     }
 
-    public boolean existsByEmail(String email) {
+    public Boolean existsByEmail(String email) {
         return userRepo.existsByEmail(email);
     }
 
-    public boolean existsByUsername(String username) {
+    public Boolean existsByUsername(String username) {
         return userRepo.existsByUsername(username);
     }
 
+    public Boolean existsByPhone(String phone){
+        return userRepo.existsByPhone(phone);
+    }
     public Role findByName(ERole role) {
         return roleRepo.findByName(role)
                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));

@@ -8,7 +8,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -31,15 +33,16 @@ public class Room {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "service")
-    private String service = null;
-
-    //    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "hotel_id")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false,cascade = CascadeType.ALL)
     @JoinColumn(name = "hotel_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Hotel hotel;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "rooms_services",
+            joinColumns = @JoinColumn(name = "room_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_id"))
+    private Set<RoomService> roomServices = new HashSet<>();
 
     @Transient
     private String hotel_name;
@@ -51,20 +54,6 @@ public class Room {
             CascadeType.ALL
     })
     private List<RoomOrder> room_orders = new ArrayList<>();
-
-
-
-    //    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinTable(name = "room_services",
-//            joinColumns = {
-//                    @JoinColumn(name = "room_id")
-//            },
-//            inverseJoinColumns = {
-//                    @JoinColumn(name = "service_id")
-//            })
-//    private Set< Service > services = new HashSet< >();
-
-
 
     public Room(Integer id, String room_name, float price, boolean status, String content) {
         this.id = id;

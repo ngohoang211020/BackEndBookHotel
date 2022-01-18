@@ -1,5 +1,7 @@
 package com.bookhotel;
 
+import com.bookhotel.entity.RoomOrder;
+import com.bookhotel.repository.RoomOrderRepository;
 import com.bookhotel.repository.UserRepository;
 import com.bookhotel.util.StringProccessUtil;
 import org.junit.jupiter.api.Test;
@@ -12,12 +14,11 @@ import java.util.Date;
 @SpringBootTest
 class LoginApplicationTests {
     @Autowired
-    private UserRepository repo;
+    private RoomOrderRepository repo;
 
     @Test
     void contextLoads() {
-        Date y=new Date("2022/2/23");
-        System.out.println(y);
+        System.out.println(StringProccessUtil.DateToString(repo.findById(1).get().getArrival_date()));
     }
 
 }

@@ -4,6 +4,7 @@ package com.bookhotel.controller;
 import com.bookhotel.entity.Hotel;
 import com.bookhotel.entity.Room;
 import com.bookhotel.entity.RoomOrder;
+import com.bookhotel.mapper.Mapper;
 import com.bookhotel.repository.HotelRepository;
 import com.bookhotel.repository.LocationRepository;
 import com.bookhotel.repository.RoomOrderRepository;
@@ -39,74 +40,91 @@ public class RoomController {
     @Autowired
     private LocationRepository locationRepository;
 
-    @Operation(summary = "Get room theo hotel", description = "Trả về list Room", tags = { "Room" })
+    @Operation(summary = "Get room theo hotel", description = "Trả về list Room", tags = {"Room"})
     @GetMapping("/hotels/{hotelId}/rooms")
     public List<Room> getRoomsByHotel(@PathVariable(value = "hotelId") Integer hotelId) {
         return roomRepository.findByHotelId(hotelId);
     }
 
-    @Operation(summary = "Insert room theo hotel", description = "Trả về ResponseObject", tags = { "Room" })
+    @Operation(summary = "Get 1 phòng trong hotel", description = "Trả về room theo id", tags = {"Room"})
+    @GetMapping("/hotels/{hotelId}/rooms/{roomId}")
+    ResponseEntity<ResponseObject> getRoomByIdByHotel(@PathVariable(value = "hotelId") Integer hotelId,
+                                              @PathVariable(value = "roomId") Integer roomId) {
+        if (!hotelRepository.existsById(hotelId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("failed", "Cannot find hotel", "")
+            );
+        } else {
+            Room room=roomRepository.findById(roomId).get();
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "Update Room Successfully", room)
+            );
+        }
+    }
+
+    @Operation(summary = "Insert room theo hotel", description = "Trả về ResponseObject", tags = {"Room"})
     @PostMapping("/hotels/{hotelId}/rooms")
-    ResponseEntity<ResponseObject> createRoom(@PathVariable(value = "hotelId") Integer hotelId, @RequestBody Room newRoom){
+    ResponseEntity<ResponseObject> createRoom(@PathVariable(value = "hotelId") Integer hotelId, @RequestBody Room newRoom) {
         Optional<Hotel> foundHotelId = hotelRepository.findById(hotelId);
-        if(foundHotelId.isPresent()){
+        if (foundHotelId.isPresent()) {
             foundHotelId.map(location -> {
                 newRoom.setHotel(location);
                 return roomRepository.save(newRoom);
             });
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Query room successfully",foundHotelId)
+                    new ResponseObject("ok", "Query room successfully", foundHotelId)
             );
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("failed","Cannot find hotel", "")
+                    new ResponseObject("failed", "Cannot find hotel", "")
             );
         }
     }
-    @Operation(summary = "Update room theo hotel", description = "Trả về ResponseObject", tags = { "Room" })
+
+    @Operation(summary = "Update room theo hotel", description = "Trả về ResponseObject", tags = {"Room"})
     @PutMapping("/hotels/{hotelId}/rooms/{roomId}")
     ResponseEntity<ResponseObject> updateRoom(@PathVariable(value = "hotelId") Integer hotelId,
-                                               @PathVariable(value = "roomId") Integer roomId,@RequestBody Room roomRequest) {
+                                              @PathVariable(value = "roomId") Integer roomId, @RequestBody Room roomRequest) {
         if (!hotelRepository.existsById(hotelId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("failed","Cannot find hotel", "")
+                    new ResponseObject("failed", "Cannot find hotel", "")
             );
-        }else{
+        } else {
             Room updateRoom = roomRepository.findById(roomId).map(room -> {
                 room.setRoom_name(roomRequest.getRoom_name());
                 room.setPrice(roomRequest.getPrice());
                 room.setStatus(roomRequest.getStatus());
                 room.setContent(roomRequest.getContent());
-                room.setService(roomRequest.getService());
+                room.setRoomServices(roomRequest.getRoomServices());
                 return roomRepository.save(room);
-            }).orElseGet(()->{
+            }).orElseGet(() -> {
                 roomRequest.setId(roomId);
                 return roomRepository.save(roomRequest);
             });
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok","Update Room Successfully", updateRoom)
+                    new ResponseObject("ok", "Update Room Successfully", updateRoom)
             );
         }
     }
 
-    @Operation(summary = "Delete room theo hotel", description = "Trả về ResponseObject", tags = { "Room" })
+    @Operation(summary = "Delete room theo hotel", description = "Trả về ResponseObject", tags = {"Room"})
     @DeleteMapping("/hotels/{hotelId}/rooms/{roomId}")
     ResponseEntity<ResponseObject> deleterRoom(@PathVariable(value = "hotelId") Integer hotelId,
-                                               @PathVariable(value = "roomId") Integer roomId){
+                                               @PathVariable(value = "roomId") Integer roomId) {
         if (!hotelRepository.findById(hotelId).isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("failed","Cannot find location", "")
+                    new ResponseObject("failed", "Cannot find location", "")
             );
-        }else{
+        } else {
             boolean exists = roomRepository.existsById(roomId);
-            if(exists){
+            if (exists) {
                 roomRepository.deleteById(roomId);
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("ok","Delete Room Successfully", "")
+                        new ResponseObject("ok", "Delete Room Successfully", "")
                 );
-            }else {
+            } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("failed","Cannot find room to delete", "")
+                        new ResponseObject("failed", "Cannot find room to delete", "")
                 );
             }
         }
@@ -114,25 +132,9 @@ public class RoomController {
 
     @PostMapping("/hotels/{hotelId}/rooms/{roomId}/order")
     public ResponseEntity<ResponseObject> orderRoom(@RequestBody OrderRequest orderRequest, @PathVariable("hotelId") Integer hotelId, @PathVariable("roomId") Integer roomId) {
-        RoomOrder order = new RoomOrder();
-        order.setName(orderRequest.getName());
-        order.setEmail(orderRequest.getEmail());
-        order.setPhone(orderRequest.getPhone());
-        order.setIdentity_card(orderRequest.getIdentification());
-        Date arrivalDate= StringProccessUtil.StringToDate(orderRequest.getArrival_date());
-        Date departureDate=StringProccessUtil.StringToDate(orderRequest.getDeparture_date());
-        order.setArrival_date(arrivalDate);
-        order.setDeparture_date(departureDate);
-        order.setName(orderRequest.getName());
-        Hotel hotel = hotelRepository.findById(hotelId).get();
         Room room = roomRepository.findById(roomId).get();
-        room.setService(orderRequest.getService());
-        order.setRoom(room);
-        order.setHotel_name(hotel.getName());
-        order.setRoom_name(room.getRoom_name());
-        order.setLocation_name(hotel.getLocation().getLocation());
-        order.setRoomCharge(room.getPrice() * StringProccessUtil.daysBetween2Dates(arrivalDate, departureDate));
-      /*  roomOrderRepository.save(order);*/
+        RoomOrder order = Mapper.orderRequestToRoomOrder(orderRequest,room);
+        roomOrderRepository.save(order);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "Order Room SuccessFull", order)
         );

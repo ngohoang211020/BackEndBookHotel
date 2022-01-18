@@ -1,15 +1,15 @@
 package com.bookhotel.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import javax.validation.constraints.Null;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -41,18 +41,21 @@ public class RoomOrder {
     @Column(name = "number_of_people")
     private Integer number_of_people;
 
-    @Column(name = "payment")
+    @Column(name = "payment",columnDefinition = "boolean default false")
     private Boolean payment;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Float roomCharge;
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "room_id")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private Room room;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private User user;
+    @JsonIgnore
+    private User user=null;
 
     @Transient
     private String room_name;
@@ -64,8 +67,6 @@ public class RoomOrder {
     private String location_name;
 
     @Transient
-    private Float roomCharge;
-
-
+    private Set<String> roomService=new HashSet<>();
 
 }
