@@ -67,7 +67,7 @@ public class AuthController {
                     userDetails.getId(),
                     userDetails.getUsername(), userDetails.getName(),
                     userDetails.getPhone(), userDetails.getAddress(), userDetails.getIdentification(), userDetails.getEmail(),
-                    roles));
+                    userDetails.getPassword(),roles));
         } catch (AuthenticationException e) {
             return ResponseEntity.ok(new MessageResponse("Error: Authentication Fail", false));
 

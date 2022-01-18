@@ -132,7 +132,7 @@ public class RoomController {
         order.setRoom_name(room.getRoom_name());
         order.setLocation_name(hotel.getLocation().getLocation());
         order.setRoomCharge(room.getPrice() * StringProccessUtil.daysBetween2Dates(arrivalDate, departureDate));
-        roomOrderRepository.save(order);
+      /*  roomOrderRepository.save(order);*/
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "Order Room SuccessFull", order)
         );

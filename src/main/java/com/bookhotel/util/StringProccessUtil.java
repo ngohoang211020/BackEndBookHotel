@@ -17,7 +17,7 @@ public class StringProccessUtil {
     }
 
     public static String DateToString(Date date) {
-        SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");
         return df.format(date);
     }
     public static Integer daysBetween2Dates(Date x,Date y){
