@@ -66,7 +66,7 @@ public class AuthController {
             return ResponseEntity.ok(new JwtResponse(jwt,
                     userDetails.getId(),
                     userDetails.getUsername(), userDetails.getName(),
-                    userDetails.getEmail(), userDetails.getIdentification(), userDetails.getAddress(), userDetails.getPassword(),
+                    userDetails.getPhone(), userDetails.getAddress(), userDetails.getIdentification(), userDetails.getEmail(),
                     roles));
         } catch (AuthenticationException e) {
             return ResponseEntity.ok(new MessageResponse("Error: Authentication Fail", false));
