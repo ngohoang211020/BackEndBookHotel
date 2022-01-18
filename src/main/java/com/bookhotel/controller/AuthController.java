@@ -43,7 +43,7 @@ public class AuthController {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @Operation(summary = "Đăng nhập", description = "Trả về jwt và thông tin user", tags = { "Login/logout" })
+    @Operation(summary = "Đăng nhập", description = "Trả về jwt và thông tin user", tags = {"Login/logout"})
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         // Xác thực từ username và password.
@@ -65,8 +65,8 @@ public class AuthController {
 
             return ResponseEntity.ok(new JwtResponse(jwt,
                     userDetails.getId(),
-                    userDetails.getUsername(),
-                    userDetails.getEmail(),
+                    userDetails.getUsername(), userDetails.getName(),
+                    userDetails.getEmail(), userDetails.getIdentification(), userDetails.getAddress(), userDetails.getPassword(),
                     roles));
         } catch (AuthenticationException e) {
             return ResponseEntity.ok(new MessageResponse("Error: Authentication Fail", false));
@@ -75,7 +75,7 @@ public class AuthController {
 
     }
 
-    @Operation(summary = "Đăng ký", description = "Trả về message", tags = { "Login/logout" })
+    @Operation(summary = "Đăng ký", description = "Trả về message", tags = {"Login/logout"})
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
         if (userService.existsByUsername(signUpRequest.getUsername())) {
@@ -92,7 +92,7 @@ public class AuthController {
         // Create new user's account
         User user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()),signUpRequest.getName(),signUpRequest.getGender(), signUpRequest.getAddress(), signUpRequest.getIdentification(), signUpRequest.getPhone());
+                encoder.encode(signUpRequest.getPassword()), signUpRequest.getName(), signUpRequest.getGender(), signUpRequest.getAddress(), signUpRequest.getIdentification(), signUpRequest.getPhone());
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();

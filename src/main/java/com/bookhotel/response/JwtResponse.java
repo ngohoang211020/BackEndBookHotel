@@ -13,6 +13,10 @@ public class JwtResponse {
     private final String type = "Bearer";
     private Integer id;
     private String username;
+    private String name;
+    private String phone;
+    private String address;
+    private String identification;
     private String email;
     private List<String> roles;
 
