@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "rooms")
-public class Room extends AuditModel{
+public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -25,9 +25,9 @@ public class Room extends AuditModel{
     @Column(name = "room_name")
     private String room_name;
     @Column(name = "price")
-    private float price;
-    @Column(name = "status")
-    private boolean status;
+    private Float price;
+    @Column(name = "status",columnDefinition = "boolean default false")
+    private Boolean status;
     @Column(name = "content")
     private String content;
 
@@ -53,9 +53,6 @@ public class Room extends AuditModel{
     private List<RoomOrder> room_orders = new ArrayList<>();
 
 
-    //    public void setRoom_orders(List<Room> room_orders) {
-//        this.room_orders = room_orders;
-//    }
 
     //    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    @JoinTable(name = "room_services",
@@ -66,14 +63,7 @@ public class Room extends AuditModel{
 //                    @JoinColumn(name = "service_id")
 //            })
 //    private Set< Service > services = new HashSet< >();
-//
-//    public Set<Service> getServices() {
-//        return services;
-//    }
-//
-//    public void setServices(Set<Service> services) {
-//        this.services = services;
-//    }
+
 
 
     public Room(Integer id, String room_name, float price, boolean status, String content) {

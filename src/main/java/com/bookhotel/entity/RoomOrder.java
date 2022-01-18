@@ -7,18 +7,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class RoomOrder extends AuditModel{
+public class RoomOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "name")
     private String name;
@@ -30,21 +31,28 @@ public class RoomOrder extends AuditModel{
     private String identity_card;
 
     @Column(name = "arrival_date")
+    @Temporal(TemporalType.DATE)
     private Date arrival_date;
 
     @Column(name = "departure_date")
+    @Temporal(TemporalType.DATE)
     private Date departure_date;
 
     @Column(name = "number_of_people")
-    private int number_of_people;
+    private Integer number_of_people;
 
     @Column(name = "payment")
-    private boolean payment;
+    private Boolean payment;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "room_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Room room;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private User user;
 
     @Transient
     private String room_name;
@@ -55,17 +63,9 @@ public class RoomOrder extends AuditModel{
     @Transient
     private String location_name;
 
+    @Transient
+    private Float roomCharge;
 
-    public RoomOrder(Integer id, String name, String phone, String email, String identity_card, Date arrival_date, Date departure_date, int number_of_people, boolean payment) {
-        this.id = id;
-        this.name = name;
-        this.phone = phone;
-        this.email = email;
-        this.identity_card = identity_card;
-        this.arrival_date = arrival_date;
-        this.departure_date = departure_date;
-        this.number_of_people = number_of_people;
-        this.payment = payment;
-    }
+
 
 }
