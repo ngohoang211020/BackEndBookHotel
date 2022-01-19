@@ -132,6 +132,7 @@ public class RoomController {
         }
     }
 
+    @Operation(summary = "Đặt phòng khi không Login", description = "Trả về thông tin người đặt phòng", tags = { "Room" })
     @PostMapping("/hotels/{hotelId}/rooms/{roomId}/order")
     public ResponseEntity<ResponseObject> orderRoom(@RequestBody OrderRequest orderRequest, @PathVariable("hotelId") Integer hotelId, @PathVariable("roomId") Integer roomId) {
         Room room = roomRepository.findById(roomId).get();

@@ -12,6 +12,7 @@ import com.bookhotel.request.OrderRequest;
 import com.bookhotel.request.SignupRequest;
 import com.bookhotel.response.ResponseObject;
 import com.bookhotel.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ public class UserController {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Operation(summary = "Lấy danh sách phòng đặt chưa trả", description = "Trả về listRoomOrder status=false", tags = { "Api User sau khi Login" })
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{userId}/order/false")
     public ResponseEntity<ResponseObject> listRoomOrderFalse(@PathVariable("userId") Integer userId) {
@@ -67,6 +69,7 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Lấy đơn đặt phòng theo id để đánh giá", description = "Trả về roomOrder", tags = { "Api User sau khi Login" })
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{userId}/order/{orderId}")
     public ResponseEntity<ResponseObject> getOrderByIdForRate(@PathVariable("userId") Integer userId, @PathVariable("orderId") Integer orderId) {
@@ -84,6 +87,7 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Lấy danh sách phòng đặt đã trả", description = "Trả về listRoomOrder status=true", tags = { "Api User sau khi Login" })
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{userId}/order/true")
     public ResponseEntity<ResponseObject> listRoomOrderTrue(@PathVariable("userId") Integer userId) {
@@ -110,6 +114,7 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Đặt phòng sau khi đăng nhập", description = "Trả về thông tin người đặt phòng và phòng", tags = { "Api User sau khi Login" })
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/{userId}/order/{roomId}")
     public ResponseEntity<ResponseObject> userOrderRoom(@PathVariable("userId") Integer userId, @PathVariable("roomId") Integer roomId, @RequestBody OrderRequest orderRequest) {
@@ -124,6 +129,7 @@ public class UserController {
 
     }
 
+    @Operation(summary = "User cập nhật thông tin", description = "Trả về thông tin user sau khi cập nhật", tags = { "Api User sau khi Login" })
     @PreAuthorize("hasRole('USER')")
     @PutMapping("/{userId}/update")
     public ResponseEntity<ResponseObject> updateUser(@PathVariable("userId") Integer userId, @RequestBody SignupRequest userInfo) {
@@ -146,6 +152,7 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Comment đánh giá phòng", description = "Trả về thông tin comment và phòng đã đánh giá", tags = { "Api User sau khi Login" })
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/{userId}/order/{orderId}/comment")
     public ResponseEntity<ResponseObject> commentOrder(@PathVariable("userId") Integer userId, @PathVariable("orderId") Integer orderId, @RequestBody Comment comment) {
