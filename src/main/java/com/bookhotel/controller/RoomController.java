@@ -4,6 +4,7 @@ package com.bookhotel.controller;
 import com.bookhotel.entity.Hotel;
 import com.bookhotel.entity.Room;
 import com.bookhotel.entity.RoomOrder;
+import com.bookhotel.entity.User;
 import com.bookhotel.mapper.Mapper;
 import com.bookhotel.repository.HotelRepository;
 import com.bookhotel.repository.LocationRepository;
@@ -11,6 +12,7 @@ import com.bookhotel.repository.RoomOrderRepository;
 import com.bookhotel.repository.RoomRepository;
 import com.bookhotel.request.OrderRequest;
 import com.bookhotel.response.ResponseObject;
+import com.bookhotel.service.UserService;
 import com.bookhotel.util.StringProccessUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,7 @@ public class RoomController {
     private RoomOrderRepository roomOrderRepository;
 
     @Autowired
-    private LocationRepository locationRepository;
+    private UserService userService;
 
     @Operation(summary = "Get room theo hotel", description = "Trả về list Room", tags = {"Room"})
     @GetMapping("/hotels/{hotelId}/rooms")
@@ -93,7 +95,7 @@ public class RoomController {
             Room updateRoom = roomRepository.findById(roomId).map(room -> {
                 room.setRoom_name(roomRequest.getRoom_name());
                 room.setPrice(roomRequest.getPrice());
-                room.setStatus(roomRequest.getStatus());
+                room.setStatus(roomRequest.isStatus());
                 room.setContent(roomRequest.getContent());
                 room.setRoomServices(roomRequest.getRoomServices());
                 return roomRepository.save(room);
@@ -133,7 +135,8 @@ public class RoomController {
     @PostMapping("/hotels/{hotelId}/rooms/{roomId}/order")
     public ResponseEntity<ResponseObject> orderRoom(@RequestBody OrderRequest orderRequest, @PathVariable("hotelId") Integer hotelId, @PathVariable("roomId") Integer roomId) {
         Room room = roomRepository.findById(roomId).get();
-        RoomOrder order = Mapper.orderRequestToRoomOrder(orderRequest,room);
+        User user=userService.findById(orderRequest.getUser_id());
+        RoomOrder order = Mapper.orderRequestToRoomOrder(orderRequest,room,user);
         roomOrderRepository.save(order);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "Order Room SuccessFull", order)

@@ -29,11 +29,11 @@ public class Room {
     @Column(name = "price")
     private Float price;
     @Column(name = "status",columnDefinition = "boolean default false")
-    private Boolean status;
+    private boolean status;
     @Column(name = "content")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "hotel_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Hotel hotel;

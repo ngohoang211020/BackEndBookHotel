@@ -13,4 +13,7 @@ public class OrderRequest {
     private String arrival_date;
     private String departure_date;
     private Integer number_of_people;
+    private Integer user_id;
+    private Integer room_id;
+    private boolean status;
 }

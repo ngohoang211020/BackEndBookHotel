@@ -46,16 +46,19 @@ public class RoomOrder {
 
     private Float roomCharge;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @Column(columnDefinition = "boolean default false")
+    private boolean status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     @JsonIgnore
     private Room room;
 
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY,optional = true)
     @JoinColumn(name = "user_id")
     @JsonIgnore
-    private User user=null;
+    private User user;
 
     @Transient
     private String room_name;
