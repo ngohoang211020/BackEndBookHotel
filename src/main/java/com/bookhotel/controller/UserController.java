@@ -1,9 +1,11 @@
 package com.bookhotel.controller;
 
+import com.bookhotel.entity.Comment;
 import com.bookhotel.entity.Room;
 import com.bookhotel.entity.RoomOrder;
 import com.bookhotel.entity.User;
 import com.bookhotel.mapper.Mapper;
+import com.bookhotel.repository.CommentRepository;
 import com.bookhotel.repository.RoomOrderRepository;
 import com.bookhotel.repository.RoomRepository;
 import com.bookhotel.request.OrderRequest;
@@ -36,12 +38,14 @@ public class UserController {
     @Autowired
     private RoomOrderRepository roomOrderRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{userId}/order/false")
     public ResponseEntity<ResponseObject> listRoomOrderFalse(@PathVariable("userId") Integer userId) {
         if (userService.existsById(userId)) {
-            List<RoomOrder> temp=roomOrderRepository.findlistOrderByStatus(userId, false);
+            List<RoomOrder> temp = roomOrderRepository.findlistOrderByStatus(userId, false);
             List<OrderRequest> orderRequestList = new ArrayList<OrderRequest>();
             List<RoomOrder> roomOrderList = new ArrayList<RoomOrder>();
             temp
@@ -50,11 +54,28 @@ public class UserController {
             orderRequestList
                     .stream()
                     .forEach(item -> roomOrderList.add(Mapper.orderRequestToRoomOrder(item
-                            ,roomRepository.findById(item.getRoom_id()).get()
-                            ,userService.findById(item.getUser_id()))));
-            temp.stream().forEach(item->roomOrderList.get(temp.indexOf(item)).setId(item.getId()));
+                            , roomRepository.findById(item.getRoom_id()).get()
+                            , userService.findById(item.getUser_id()))));
+            temp.stream().forEach(item -> roomOrderList.get(temp.indexOf(item)).setId(item.getId()));
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "Order Room SuccessFull", roomOrderList)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Fail", "Not Found Exception", "")
+            );
+        }
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/{userId}/order/{orderId}")
+    public ResponseEntity<ResponseObject> getOrderByIdForRate(@PathVariable("userId") Integer userId, @PathVariable("orderId") Integer orderId) {
+        if (userService.existsById(userId)) {
+            OrderRequest orderRequest = Mapper.roomOrderToOrderRequest(roomOrderRepository.findById(orderId).get());
+            RoomOrder roomOrder = Mapper.orderRequestToRoomOrder(orderRequest, roomRepository.findById(orderRequest.getRoom_id()).get(), userService.findById(orderRequest.getUser_id()));
+            roomOrder.setId(orderId);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "Order Room SuccessFull", roomOrder)
             );
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -67,7 +88,7 @@ public class UserController {
     @GetMapping("/{userId}/order/true")
     public ResponseEntity<ResponseObject> listRoomOrderTrue(@PathVariable("userId") Integer userId) {
         if (userService.existsById(userId)) {
-            List<RoomOrder> temp=roomOrderRepository.findlistOrderByStatus(userId, true);
+            List<RoomOrder> temp = roomOrderRepository.findlistOrderByStatus(userId, true);
             List<OrderRequest> orderRequestList = new ArrayList<OrderRequest>();
             List<RoomOrder> roomOrderList = new ArrayList<RoomOrder>();
             temp
@@ -76,11 +97,11 @@ public class UserController {
             orderRequestList
                     .stream()
                     .forEach(item -> roomOrderList.add(Mapper.orderRequestToRoomOrder(item
-                        ,roomRepository.findById(item.getRoom_id()).get()
-                            ,userService.findById(item.getUser_id()))));
-            temp.stream().forEach(item->roomOrderList.get(temp.indexOf(item)).setId(item.getId()));
+                            , roomRepository.findById(item.getRoom_id()).get()
+                            , userService.findById(item.getUser_id()))));
+            temp.stream().forEach(item -> roomOrderList.get(temp.indexOf(item)).setId(item.getId()));
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Order Room SuccessFull", roomOrderList)
+                    new ResponseObject("ok", "Get list order SuccessFull", roomOrderList)
             );
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -116,12 +137,31 @@ public class UserController {
             user.setPassword(encoder.encode(userInfo.getPassword()));
             userService.save(user);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("ok", "Query location successfully", user)
+                    new ResponseObject("ok", "Update User successfully", user)
             );
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("Fail", "User Not Found", "")
             );
         }
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/{userId}/order/{orderId}/comment")
+    public ResponseEntity<ResponseObject> commentOrder(@PathVariable("userId") Integer userId, @PathVariable("orderId") Integer orderId, @RequestBody Comment comment) {
+        if (userService.existsById(userId)) {
+            RoomOrder order = roomOrderRepository.findById(orderId).get();
+            comment.setRoomOrder(order);
+            comment.setRoom(roomRepository.findById(order.getRoom().getId()).get());
+            commentRepository.save(comment);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("ok", "Comment Successful", comment)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Fail", "User Not Found", "")
+            );
+        }
+
     }
 }
