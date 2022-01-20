@@ -2,6 +2,7 @@ package com.bookhotel.repository;
 
 
 import com.bookhotel.entity.User;
+import com.bookhotel.enums.ERole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,8 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUsername(String username);
+
+    List<User> findByRolesName(ERole name);
 
     Boolean existsByUsername(String username);
 

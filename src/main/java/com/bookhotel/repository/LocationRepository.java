@@ -14,4 +14,7 @@ public interface LocationRepository extends JpaRepository<Location, Integer> {
 
     List<Location> findByLocation(String trim);
 
+    boolean existsByLocation(String location);
+
+
 }
