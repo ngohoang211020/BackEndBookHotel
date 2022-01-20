@@ -136,8 +136,7 @@ public class RoomController {
     @PostMapping("/hotels/{hotelId}/rooms/{roomId}/order")
     public ResponseEntity<ResponseObject> orderRoom(@RequestBody OrderRequest orderRequest, @PathVariable("hotelId") Integer hotelId, @PathVariable("roomId") Integer roomId) {
         Room room = roomRepository.findById(roomId).get();
-        User user=userService.findById(orderRequest.getUser_id());
-        RoomOrder order = Mapper.orderRequestToRoomOrder(orderRequest,room,user);
+        RoomOrder order = Mapper.orderRequestToRoomOrder(orderRequest,room,null);
         roomOrderRepository.save(order);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("ok", "Order Room SuccessFull", order)

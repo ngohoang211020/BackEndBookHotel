@@ -10,6 +10,7 @@ import com.bookhotel.repository.RoomOrderRepository;
 import com.bookhotel.repository.RoomRepository;
 import com.bookhotel.request.OrderRequest;
 import com.bookhotel.request.SignupRequest;
+import com.bookhotel.request.UpdateRequest;
 import com.bookhotel.response.ResponseObject;
 import com.bookhotel.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -132,15 +133,17 @@ public class UserController {
     @Operation(summary = "User cập nhật thông tin", description = "Trả về thông tin user sau khi cập nhật", tags = { "Api User sau khi Login" })
     @PreAuthorize("hasRole('USER')")
     @PutMapping("/{userId}/update")
-    public ResponseEntity<ResponseObject> updateUser(@PathVariable("userId") Integer userId, @RequestBody SignupRequest userInfo) {
+    public ResponseEntity<ResponseObject> updateUser(@PathVariable("userId") Integer userId, @RequestBody UpdateRequest updateRequest) {
         if (userService.existsById(userId)) {
             User user = userService.findById(userId);
-            user.setName(userInfo.getName());
-            user.setPhone(userInfo.getPhone());
-            user.setAddress(userInfo.getAddress());
-            user.setIdentification(userInfo.getIdentification());
-            user.setEmail(userInfo.getEmail());
-            user.setPassword(encoder.encode(userInfo.getPassword()));
+            user.setName(updateRequest.getName());
+            user.setPhone(updateRequest.getPhone());
+            user.setAddress(updateRequest.getAddress());
+            user.setIdentification(updateRequest.getIdentification());
+            user.setEmail(updateRequest.getEmail());
+            if(updateRequest.getPassword()!=null){
+                user.setPassword(encoder.encode(updateRequest.getPassword()));
+            }
             userService.save(user);
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseObject("ok", "Update User successfully", user)
@@ -156,7 +159,7 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/{userId}/order/{orderId}/comment")
     public ResponseEntity<ResponseObject> commentOrder(@PathVariable("userId") Integer userId, @PathVariable("orderId") Integer orderId, @RequestBody Comment comment) {
-        if (userService.existsById(userId)) {
+        if (roomOrderRepository.findByUser_Id(userId).isPresent()) {
             RoomOrder order = roomOrderRepository.findById(orderId).get();
             comment.setRoomOrder(order);
             comment.setRoom(roomRepository.findById(order.getRoom().getId()).get());

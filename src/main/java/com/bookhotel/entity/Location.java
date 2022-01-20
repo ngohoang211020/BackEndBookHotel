@@ -1,5 +1,6 @@
 package com.bookhotel.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class Location  {
     private String image;
 
     @OneToMany(mappedBy = "location", cascade = {CascadeType.ALL})
+    @JsonIgnore
     private List<Hotel> hotels = new ArrayList<>();
 
     @Transient

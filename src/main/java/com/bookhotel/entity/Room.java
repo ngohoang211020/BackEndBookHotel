@@ -1,5 +1,6 @@
 package com.bookhotel.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,16 +29,27 @@ public class Room {
     private String room_name;
     @Column(name = "price")
     private Float price;
+
+    @Column(name = "floor")
+    private String floor;
+
     @Column(name = "status",columnDefinition = "boolean default false")
     private boolean status;
     @Column(name = "content")
     private String content;
+
+    @OneToMany(mappedBy = "room", cascade = {
+            CascadeType.ALL
+    })
+    private List<RoomImage> roomImages = new ArrayList<>();
+
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "hotel_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Hotel hotel;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "rooms_services",
             joinColumns = @JoinColumn(name = "room_id"),
@@ -50,6 +62,7 @@ public class Room {
     @Transient
     private String location_name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "room", cascade = {
             CascadeType.ALL
     })

@@ -17,5 +17,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer> {
 
     List<Hotel> findByLocationId(Integer locationId);
 
+    List<Hotel> findByUserId(int userId);
+
     Optional<Hotel> findByIdAndLocationId(int id, int LocationId);
 }
